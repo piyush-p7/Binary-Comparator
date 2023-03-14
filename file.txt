@@ -1,75 +1,37 @@
-`define SIGN_BIT 63
-`define MSB 62
-`define exponent 61
-`define count 52
-module cmp(
-	input [63:0] dataA,
-	input [63:0] dataB,
-	output reg greater,
-	output reg smaller,
-	output reg invalid,
-	output reg equal);
+module bin_tree_cmp(
+    input [63:0] dataA,
+    input [63:0] dataB,
+    output reg greater,
+    output reg smaller,
+    output reg invalid,
+    output reg equal
+);
 
-	always @(dataA or dataB)begin
-			specialNum(dataA,smaller,equal,greater,invalid);		
-		if(dataA[`SIGN_BIT] > dataB[`SIGN_BIT] && invalid==0)begin
-			smaller = 1;		
-			equal = 0;
-			greater = 0;
-		end else if(dataA[`SIGN_BIT] < dataB[`SIGN_BIT] && invalid==0) begin
-			smaller = 0;
-			equal = 0;
-			greater = 1;
-		end else begin
-			if(dataA[`SIGN_BIT] == 0 && invalid==0)begin
-				getCmp(dataA,dataB,smaller,equal,greater,invalid);
-			end else begin
-				getCmp(dataB,dataA,smaller,equal,greater,invalid);
-			end
-		end
-	end
-	
-	task getCmp(input [63:0] dataA,
-					input [63:0] dataB,
-					output smaller,
-					output equal,
-					output greater,
-					output invalid);
-		integer i;
-		begin
-			for(i = `MSB; i >= 0; i = i - 1)begin
-				if(dataA[i] > dataB[i])begin
-					greater = 1;
-					smaller = 0;
-					equal = 0;
-					invalid = 0; 
-					i = -1;				
-end else if(dataA[i] < dataB[i])begin
-					smaller = 1;
-					greater =0;
-					equal = 0;
-					invalid = 0; 
-					i = -1;
-				end else if(dataA[i] == dataB[i]) begin
-					equal = 1;
-					greater = 0;
-					smaller = 0;
-					invalid = 0; 
-				end
-			end
-		end		
-	endtask
-	
-	task specialNum(input[63:0] dataA,
-					output smaller,
-					output equal,
-					output greater,
-					output invalid);
-		begin if ((dataA[63:52] == 1 && dataA[51:0] == 0) || (dataA[63] == 0 && dataA[62:52]==1 && dataA[51:0] == 0) ||( dataA[62:0] == 0) )
-				invalid = 1;
-				smaller = 0;
-				greater =0;
-				equal =0;
-		end		
-	endtask	
+    wire [63:0] diff = dataA - dataB;
+    reg [5:0] result;
+
+    // Binary tree comparator
+    always @* begin
+        if (diff[63]) result = 6'b000001;
+        else if (diff[62]) result = 6'b000010;
+        else if (diff[61]) result = 6'b000100;
+        else if (diff[60]) result = 6'b001000;
+        else if (diff[59]) result = 6'b010000;
+        else if (diff[58]) result = 6'b100000;
+        else result = 6'b000000;
+    end
+
+    // Output comparison result
+    always @(result) begin
+        case (result)
+            6'b000001: begin greater = 1; smaller = 0; equal = 0; invalid = 0; end
+            6'b000010: begin greater = 0; smaller = 1; equal = 0; invalid = 0; end
+            6'b000100: begin greater = 0; smaller = 1; equal = 0; invalid = 0; end
+            6'b001000: begin greater = 0; smaller = 1; equal = 0; invalid = 0; end
+            6'b010000: begin greater = 0; smaller = 1; equal = 0; invalid = 0; end
+            6'b100000: begin greater = 0; smaller = 1; equal = 0; invalid = 0; end
+            default: begin greater = 0; smaller = 0; equal = 1; invalid = 0; end
+        endcase
+    end
+
 endmodule
