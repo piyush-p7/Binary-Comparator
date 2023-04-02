@@ -1,0 +1,139 @@
+Double precision floating point comparator using binary tree.
+
+------------------------------------------------------------------------
+
+Input Code: 
+module bin_tree_cmp(
+    input [63:0] dataA,
+    input [63:0] dataB,
+    output reg greater,
+    output reg smaller,
+    output reg invalid,
+    output reg equal
+);
+
+    wire [63:0] diff = dataA - dataB;
+    reg [5:0] result;
+
+    // Binary tree comparator
+    always @* begin
+        if (diff[63]) result = 6'b000001;
+        else if (diff[62]) result = 6'b000010;
+        else if (diff[61]) result = 6'b000100;
+        else if (diff[60]) result = 6'b001000;
+        else if (diff[59]) result = 6'b010000;
+        else if (diff[58]) result = 6'b100000;
+        else result = 6'b000000;
+    end
+
+    // Output comparison result
+    always @(result) begin
+        case (result)
+            6'b000001: begin greater = 1; smaller = 0; equal = 0; invalid = 0; end
+            6'b000010: begin greater = 0; smaller = 1; equal = 0; invalid = 0; end
+            6'b000100: begin greater = 0; smaller = 1; equal = 0; invalid = 0; end
+            6'b001000: begin greater = 0; smaller = 1; equal = 0; invalid = 0; end
+            6'b010000: begin greater = 0; smaller = 1; equal = 0; invalid = 0; end
+            6'b100000: begin greater = 0; smaller = 1; equal = 0; invalid = 0; end
+            default: begin greater = 0; smaller = 0; equal = 1; invalid = 0; end
+        endcase
+    end
+
+endmodule
+
+
+
+-------------------------------------------------------------------
+
+TestBench Code: 
+
+module tb_bin_tree_cmp;
+
+  // Declare inputs and outputs
+  reg [63:0] dataA;
+  reg [63:0] dataB;
+  wire greater;
+  wire smaller;
+  wire invalid;
+  wire equal;
+
+  // Instantiate the design under test
+  bin_tree_cmp dut (
+    .dataA(dataA),
+    .dataB(dataB),
+    .greater(greater),
+    .smaller(smaller),
+    .invalid(invalid),
+    .equal(equal)
+  );
+
+  // Provide stimulus
+  initial begin
+    // Set input values
+    dataA = 64'h123456789abcdef0;
+    dataB = 64'h123456789abcdef1;
+
+    // Wait for simulation to settle
+    #10;
+
+    // Display output values
+    $display("greater = %b", greater);
+    $display("smaller = %b", smaller);
+    $display("invalid = %b", invalid);
+    $display("equal = %b", equal);
+
+    // End simulation
+    $finish;
+  end
+
+endmodule
+
+
+-----------------------------------------------------------
+Input Values we can add: 
+
+Example 1:
+dataA = 1010101010101010
+dataB = 0101010101010101
+
+Example 2:
+dataA = 1111111111111111
+dataB = 0000000000000000
+
+Example 3:
+dataA = 1100110011001100
+dataB = 0011001100110011
+
+Example 4:
+dataA = 1111000011110000
+dataB = 0000111100001111
+
+Example 5:
+dataA = 1010101010101010
+dataB = 1010101010101010
+
+Example 1:
+dataA = 1010101010101010
+dataB = 0101010101010101
+Expected output: greater = 1, smaller = 0, invalid = 0, equal = 0
+
+Example 2:
+dataA = 1111111111111111
+dataB = 0000000000000000
+Expected output: greater = 1, smaller = 0, invalid = 0, equal = 0
+
+Example 3:
+dataA = 1100110011001100
+dataB = 0011001100110011
+Expected output: greater = 1, smaller = 0, invalid = 0, equal = 0
+
+Example 4:
+dataA = 1111000011110000
+dataB = 0000111100001111
+Expected output: greater = 0, smaller = 1, invalid = 0, equal = 0
+
+Example 5:
+dataA = 1010101010101010
+dataB = 1010101010101010
+Expected output: greater = 0, smaller = 0, invalid = 0, equal = 1
+

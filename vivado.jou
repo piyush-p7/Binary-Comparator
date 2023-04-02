@@ -1,0 +1,23 @@
+#-----------------------------------------------------------
+# Vivado v2022.2.2 (64-bit)
+# SW Build 3788238 on Tue Feb 21 20:00:34 MST 2023
+# IP Build 3783773 on Tue Feb 21 23:41:56 MST 2023
+# Start of session at: Tue Mar 28 12:39:56 2023
+# Process ID: 2420
+# Current directory: D:/VIT B-TECH ENTC/VIT B-TECH ENTC 6SEM/(4) DD/Comparator
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent17716 D:\VIT B-TECH ENTC\VIT B-TECH ENTC 6SEM\(4) DD\Comparator\Comparator.xpr
+# Log file: D:/VIT B-TECH ENTC/VIT B-TECH ENTC 6SEM/(4) DD/Comparator/vivado.log
+# Journal file: D:/VIT B-TECH ENTC/VIT B-TECH ENTC 6SEM/(4) DD/Comparator\vivado.jou
+# Running On: UNIVERSE, OS: Windows, CPU Frequency: 1190 MHz, CPU Physical cores: 4, Host memory: 8361 MB
+#-----------------------------------------------------------
+start_gui
+open_project {D:/VIT B-TECH ENTC/VIT B-TECH ENTC 6SEM/(4) DD/Comparator/Comparator.xpr}
+update_compile_order -fileset sources_1
+launch_simulation
+source binaryComparator_tb.tcl
+add_bp {D:/VIT B-TECH ENTC/VIT B-TECH ENTC 6SEM/(4) DD/Comparator/Comparator.srcs/sim_1/new/binaryComparator_tb.v} 45
+remove_bps -file {D:/VIT B-TECH ENTC/VIT B-TECH ENTC 6SEM/(4) DD/Comparator/Comparator.srcs/sim_1/new/binaryComparator_tb.v} -line 45
+close_sim
+launch_simulation
+source binaryComparator_tb.tcl
+close_sim
